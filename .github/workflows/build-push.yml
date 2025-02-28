@@ -32,4 +32,7 @@ jobs:
           context: .
           file: ./4/Dockerfile
           push: true
-          tags: ghcr.io/${{ github.repository }}-mongo
+          tags: |
+          tags: |
+            ghcr.io/${{ github.repository }}-mongo:latest
+            ghcr.io/${{ github.repository }}-mongo:${{ github.sha }}
