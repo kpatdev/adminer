@@ -52,6 +52,20 @@ RUN	set -x \
 &&	tar xzf source.tar.gz --strip-components=1 "adminer-$ADMINER_VERSION/designs/" "adminer-$ADMINER_VERSION/plugins/" \
 &&	rm source.tar.gz
 
+USER root
+
+RUN apk add --no-cache autoconf gcc g++ make libffi-dev openssl-dev
+
+RUN pecl install mongodb
+RUN echo "extension=mongodb.so" > /usr/local/etc/php/conf.d/docker-php-ext-mongodb.ini
+
+RUN sed -i "s|{new|{|" adminer.php
+RUN sed -i "s|MongoClient($Li,$zf);$this->error=lang(22);}|}|" adminer.php
+
+USER adminer
+
+ENV ADMINER_DESIGN dracula
+
 COPY	entrypoint.sh /usr/local/bin/
 ENTRYPOINT	[ "entrypoint.sh", "docker-php-entrypoint" ]
 
