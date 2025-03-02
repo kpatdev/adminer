@@ -30,7 +30,7 @@ RUN	set -x \
 	pdo_odbc \
 	pdo_dblib \
 	mongodb \
-	&&	runDeps="$( \
+&&	runDeps="$( \
 		scanelf --needed --nobanner --format '%n#p' --recursive /usr/local/lib/php/extensions \
 			| tr ',' '\n' \
 			| sort -u \
