@@ -29,7 +29,6 @@ RUN	set -x \
 	pdo_sqlite \
 	pdo_odbc \
 	pdo_dblib \
-	mongodb \
 &&	runDeps="$( \
 		scanelf --needed --nobanner --format '%n#p' --recursive /usr/local/lib/php/extensions \
 			| tr ',' '\n' \
@@ -52,6 +51,13 @@ RUN	set -x \
 &&	echo "$ADMINER_SRC_DOWNLOAD_SHA256  source.tar.gz" |sha256sum -c - \
 &&	tar xzf source.tar.gz --strip-components=1 "adminer-$ADMINER_VERSION/designs/" "adminer-$ADMINER_VERSION/plugins/" \
 &&	rm source.tar.gz
+
+RUN apk add --no-cache autoconf gcc g++ make libffi-dev openssl-dev
+
+RUN pecl install mongodb
+RUN echo "extension=mongodb.so" > /usr/local/etc/php/conf.d/docker-php-ext-mongodb.ini
+
+ENV ADMINER_DESIGN dracula
 
 COPY	entrypoint.sh /usr/local/bin/
 ENTRYPOINT	[ "entrypoint.sh", "docker-php-entrypoint" ]
